@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	_ "github.com/jnovack/go-version"
+	"github.com/mattn/go-isatty"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
@@ -45,10 +47,17 @@ func main() {
 }
 
 func init() {
-
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		// Format using ConsoleWriter if running straight
+		zerolog.TimestampFunc = func() time.Time {
+			return time.Now().In(time.Local)
+		}
+		log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339})
+	} else {
+		// Format using JSON if running as a service (or container)
+		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	}
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	prometheus.MustRegister(NewCollector())
 }
