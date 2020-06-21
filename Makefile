@@ -15,4 +15,7 @@ all: build
 
 .PHONY: build
 build:
-	go build -o bin/${APPLICATION} -ldflags $(GO_LDFLAGS) ${PACKAGE}
+	go build -o bin/${APPLICATION} -ldflags $(GO_LDFLAGS) main.go collector.go client.go
+
+docker:
+	docker build --build-arg APPLICATION=mosquitto-exporter -t mosquitto-exporter:latest .
