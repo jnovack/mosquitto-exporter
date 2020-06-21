@@ -7,6 +7,12 @@
 ## requires to be a os/arch combination
 DEFAULT_ARCH="linux/amd64"
 
+echo "[***] post_push hook starting..."
+
+echo "[---] DOCKER_TAG: ${DOCKER_TAG}"
+echo "[---] DOCKER_REPO: ${DOCKER_REPO}"
+echo "[---] IMAGE_NAME: ${IMAGE_NAME}"
+
 ## Use manifest-tool to create the manifest, given the experimental
 ## "docker manifest" command isn't available yet on Docker Hub.
 TOOL_DOWNLOAD_URL="https://github.com/estesp/manifest-tool/releases/download"
@@ -69,7 +75,7 @@ MINOR=`echo ${TAG} | awk -F'-' '{print $1}' | awk -F'.' '{print $2}' | sed 's/v/
 PATCH=`echo ${TAG} | awk -F'-' '{print $1}' | awk -F'.' '{print $3}' | sed 's/v//'`
 PRLS=`echo ${TAG} | awk -F'-' '{print $2}'`
 
-echo "[***] Current Build: ${TAG}"
+echo "[!!!] Current Build: ${TAG}"
 
 ## Iterate over architectures
 MULTIARCH="${DEFAULT_ARCH}"
@@ -79,19 +85,19 @@ do
 
     case "$TARGET_ARCH" in
         *amd64)
-            echo "[---] Target Architecture: ${TARGET_ARCH}"
+            echo "[+++] Target Architecture: ${TARGET_ARCH}"
             ARCH_VARIANT="linux/amd64"
             ;;
         *arm32v7)
-            echo "[---] Target Architecture: ${TARGET_ARCH}"
+            echo "[+++] Target Architecture: ${TARGET_ARCH}"
             ARCH_VARIANT="linux/arm/v7"
             ;;
         *arm64v8)
-            echo "[---] Target Architecture: ${TARGET_ARCH}"
+            echo "[+++] Target Architecture: ${TARGET_ARCH}"
             ARCH_VARIANT="linux/arm64/v8"
             ;;
         *)
-            echo "[!!!] Unknown target architecture ${TARGET_ARCH}, ignoring"
+            echo "[---] Unknown target architecture ${TARGET_ARCH}, ignoring"
             ARCH_VARIANT=""
             ;;
     esac
@@ -123,5 +129,7 @@ if [ ! -z $MAJOR ] && [[ $MAJOR =~ $num ]]; then
         fi
     fi
 fi
+
+echo "[***] ...post_push hook complete."
 
 exit $?
