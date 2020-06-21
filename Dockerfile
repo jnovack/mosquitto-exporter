@@ -2,6 +2,19 @@
 FROM golang:1.14-alpine AS build
 WORKDIR /go/src/app
 
+# Create appuser.
+# See https://stackoverflow.com/a/55757473/12429735RUN
+ENV USER=appuser
+ENV UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    "${USER}"
+
 RUN apk add --no-cache git ca-certificates
 
 COPY go.mod .
@@ -17,16 +30,19 @@ ARG GO_LDFLAGS="-w -s \
         -X github.com/jnovack/go-version.BuildDate=${BUILD_RFC3339} \
         -X github.com/jnovack/go-version.Revision=${COMMIT} \
         -X github.com/jnovack/go-version.Version=${VERSION} \
-        "
+        -extldflags '-static'"
 
 # Build
 COPY . .
-RUN go build -ldflags "${GO_LDFLAGS}" -o /go/bin/${APPLICATION} .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "${GO_LDFLAGS}" -o /go/bin/${APPLICATION} .
 
 ###############################################################################
 # final stage
 FROM scratch
 COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /etc/passwd /etc/passwd
+COPY --from=build /etc/group /etc/group
+USER appuser:appuser
 
 ARG BUILD_RFC3339="1970-01-01T00:00:00Z"
 ARG COMMIT="local"
