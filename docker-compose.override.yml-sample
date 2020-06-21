@@ -1,0 +1,10 @@
+version: '2.4'
+
+services:
+  exporter:
+    environment:
+      - ENDPOINT=tls://mosquitto:8883
+      - USERNAME=mqttuser
+      - PASSWORD=hunter2
+    ports:
+      - 9344:9334
