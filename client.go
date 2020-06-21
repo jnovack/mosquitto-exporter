@@ -88,14 +88,14 @@ func mqttConnect(client mqtt.Client) {
 	// try to connect forever
 	for {
 		token := client.Connect()
-		log.Info().Msg("Attempting to connect...")
+		log.Info().Str("endpoint", *endpoint).Msg("Attempting to connect to mosquitto endpoint")
 		if token.WaitTimeout(5 * time.Second) {
 			if token.Error() == nil {
 				break
 			}
-			log.Error().Err(token.Error()).Msg("Failed to connect to broker")
+			log.Error().Err(token.Error()).Str("endpoint", *endpoint).Msg("Failed to connect to mosquitto endpoint")
 		} else {
-			log.Error().Msg("Timeout connecting to endpoint")
+			log.Error().Str("endpoint", *endpoint).Msg("Timeout connecting to mosquitto endpoint")
 		}
 		time.Sleep(5 * time.Second)
 	}
