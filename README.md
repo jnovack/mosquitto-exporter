@@ -6,7 +6,7 @@ There is a docker image available:
 ```
 docker run \
   -p 9234:9234 jnovack/mosquitto-exporter \
-  -broker tcp://mosquitto:1883
+  -endpoint tcp://mosquitto:1883
 ```
 
 ## Features
