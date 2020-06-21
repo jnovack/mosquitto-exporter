@@ -1,5 +1,7 @@
+**/.dockerignore
 **/.env
 **/.git
+**/.gitignore
 **/.project
 **/.settings
 **/.toolstarget
@@ -8,6 +10,8 @@
 **/*.*proj.user
 **/azds.yaml
 **/bin
+**/docker-compose*
+**/Dockerfile*
 **/node_modules
 **/npm-debug.log
 **/obj

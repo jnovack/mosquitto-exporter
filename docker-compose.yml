@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  mosquitto-exporter:
+    image: mosquitto-exporter
+    build: .
+    ports:
+      - 9344
