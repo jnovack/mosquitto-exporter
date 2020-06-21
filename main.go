@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"net/http"
 	"os"
 	"strconv"
@@ -9,6 +8,7 @@ import (
 
 	_ "github.com/jnovack/go-version"
 	"github.com/mattn/go-isatty"
+	"github.com/namsral/flag"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/rs/zerolog"
