@@ -12,3 +12,4 @@
 **/npm-debug.log
 **/obj
 **/docker-compose.override.yml
+**/qemu*
