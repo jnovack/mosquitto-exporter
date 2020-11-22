@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	version "github.com/jnovack/go-version"
+	version "github.com/jnovack/release"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/common/log"
 )

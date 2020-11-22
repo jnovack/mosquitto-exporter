@@ -5,10 +5,10 @@ COMMIT := $(shell git rev-parse HEAD)
 VERSION := $(shell git describe --tags)
 
 GO_LDFLAGS := "-w -s \
-	-X github.com/jnovack/go-version.Application=${APPLICATION} \
-	-X github.com/jnovack/go-version.BuildDate=${BUILD_RFC3339} \
-	-X github.com/jnovack/go-version.Revision=${COMMIT} \
-	-X github.com/jnovack/go-version.Version=${VERSION} \
+	-X github.com/jnovack/release.Application=${APPLICATION} \
+	-X github.com/jnovack/release.BuildDate=${BUILD_RFC3339} \
+	-X github.com/jnovack/release.Revision=${COMMIT} \
+	-X github.com/jnovack/release.Version=${VERSION} \
 	"
 
 all: build

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	_ "github.com/jnovack/go-version"
+	_ "github.com/jnovack/release"
 	"github.com/mattn/go-isatty"
 	"github.com/namsral/flag"
 	"github.com/prometheus/client_golang/prometheus"

@@ -37,8 +37,8 @@ github.com/google/go-cmp v0.3.1/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMyw
 github.com/google/go-cmp v0.4.0 h1:xsAVV57WRhGj6kEIi8ReJzQlHHqcBYCElAvkovg3B/4=
 github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
-github.com/jnovack/go-version v1.0.0 h1:Rq7qySfkkjaEJeSV8Oh8nl6ZFNCga6KcsG5zmDPDDro=
-github.com/jnovack/go-version v1.0.0/go.mod h1:+wCtyeQ6/Ttm8Ih/g+48icj4NyFTvKqCC3v61ZV1CLs=
+github.com/jnovack/release v0.0.4 h1:1go4fpb/1lgEII0SfkdNqPepPxXZQ3Se9oBIigfTOLs=
+github.com/jnovack/release v0.0.4/go.mod h1:yub2/ysgmWBbFDbmqBwedg++9lJ8rDyu72sh0U1NAxc=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
 github.com/json-iterator/go v1.1.10/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/julienschmidt/httprouter v1.2.0/go.mod h1:SYymIcj16QtmaHHD7aYtjjsJG7VTCxuUUipMqKk8s4w=
