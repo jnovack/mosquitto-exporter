@@ -3,7 +3,7 @@ FROM golang:1.15-alpine AS build
 WORKDIR /go/src/app
 
 # Create appuser.
-# See https://stackoverflow.com/a/55757473/12429735RUN
+# See https://stackoverflow.com/a/55757473/12429735
 ENV USER=appuser
 ENV UID=10001
 RUN adduser \
