@@ -87,9 +87,20 @@ func RunMQTTClient(mqttOpts *Options) {
 
 	opts.OnConnect = func(client mqtt.Client) {
 		log.Info().Msgf("Connected to %s", mqttOpts.Endpoint)
+
+		// set optionsReader and check if TLS
+		optionsReader := client.OptionsReader()
+		isTLS := 0
+		if optionsReader.Servers()[0].Scheme == "tls" {
+			isTLS = 1
+		}
+
+		// create a metric to track tls
+		processGaugeMetric("mqtt/connection/tls", fmt.Sprintf("%d", isTLS), prometheus.Labels{"broker": getHostnamePort(optionsReader)})
+
 		// subscribe on every (re)connect
 		token := client.Subscribe("$SYS/#", 0, func(broker mqtt.Client, msg mqtt.Message) {
-			processUpdate(msg.Topic(), string(msg.Payload()), broker.OptionsReader())
+			processUpdate(msg.Topic(), string(msg.Payload()), optionsReader)
 		})
 		if !token.WaitTimeout(10 * time.Second) {
 			log.Error().Msg("Error: Timeout subscribing to topic $SYS/#")
@@ -130,7 +141,7 @@ func mqttConnect(client mqtt.Client, mqttOpts *Options) {
 // process the messages received in $SYS/
 func processUpdate(topic, payload string, reader mqtt.ClientOptionsReader) {
 	//log.Debugf("Got broker update with topic %s and data %s", topic, payload)
-	labels := prometheus.Labels{"broker": fmt.Sprintf("%s:%s", reader.Servers()[0].Hostname(), reader.Servers()[0].Port())}
+	labels := prometheus.Labels{"broker": getHostnamePort(reader)}
 
 	if _, ok := ignoreKeyMetrics[topic]; !ok {
 		if _, ok := counterKeyMetrics[topic]; ok {
@@ -204,4 +215,8 @@ func parseValue(payload string) float64 {
 		}
 	}
 	return 0
+}
+
+func getHostnamePort(reader mqtt.ClientOptionsReader) string {
+	return fmt.Sprintf("%s:%s", reader.Servers()[0].Hostname(), reader.Servers()[0].Port())
 }
