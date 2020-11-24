@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jnovack/mosquitto-exporter/internal/mqttclient"
 	_ "github.com/jnovack/release"
 	"github.com/mattn/go-isatty"
 	"github.com/namsral/flag"
@@ -39,7 +40,16 @@ func main() {
 			</html>`))
 	})
 
-	runMQTTClient()
+	opts := mqttclient.NewOptions()
+	opts.Endpoint = *endpoint
+	opts.ClientID = *clientID
+	opts.Username = *username
+	opts.Password = *password
+	opts.CertFile = *certFile
+	opts.KeyFile = *keyFile
+	opts.Port = *port
+
+	mqttclient.RunMQTTClient(opts)
 
 	log.Info().Msg("Serving metrics on " + strconv.FormatInt(int64(*port), 10))
 	log.Fatal().Err(http.ListenAndServe(":"+strconv.FormatInt(int64(*port), 10), nil))
@@ -59,5 +69,5 @@ func init() {
 	}
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 
-	prometheus.MustRegister(NewCollector())
+	prometheus.MustRegister(mqttclient.NewCollector())
 }

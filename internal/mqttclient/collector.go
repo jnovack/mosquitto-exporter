@@ -1,4 +1,4 @@
-package main
+package mqttclient
 
 import (
 	"sync"
@@ -85,23 +85,6 @@ func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 		1,
 	)
 
-	// Datacenter Metrics
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		defer timeTrack(ch, time.Now(), "datacenterMetrics")
-		cm := datacenterMetrics(ch)
-		for _, m := range cm {
-
-			ch <- prometheus.MustNewConstMetric(
-				prometheus.NewDesc(m.name, m.help, []string{}, m.labels),
-				prometheus.GaugeValue,
-				float64(m.value),
-			)
-		}
-
-	}()
-
 	wg.Wait()
 }
 
@@ -110,13 +93,4 @@ func NewCollector() *Collector {
 	return &Collector{
 		desc: "mosquitto Collector",
 	}
-}
-
-func datacenterMetrics(ch chan<- prometheus.Metric) []Metric {
-	// defer cancel()
-
-	var metrics []Metric
-	metrics = append(metrics, Metric{name: "vmware_datastore_size", help: "Maximum capacity of this datastore, in bytes.", value: float64(1), labels: map[string]string{"datastore": "a", "cluster": "a", "datacenter": "a"}})
-
-	return metrics
 }
