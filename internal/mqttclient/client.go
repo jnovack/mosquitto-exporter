@@ -130,7 +130,7 @@ func mqttConnect(client mqtt.Client, mqttOpts *Options) {
 // process the messages received in $SYS/
 func processUpdate(topic, payload string, reader mqtt.ClientOptionsReader) {
 	//log.Debugf("Got broker update with topic %s and data %s", topic, payload)
-	labels := prometheus.Labels{"broker": reader.Servers()[0].Hostname()}
+	labels := prometheus.Labels{"broker": fmt.Sprintf("%s:%s", reader.Servers()[0].Hostname(), reader.Servers()[0].Port())}
 
 	if _, ok := ignoreKeyMetrics[topic]; !ok {
 		if _, ok := counterKeyMetrics[topic]; ok {
