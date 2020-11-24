@@ -4,8 +4,8 @@ services:
   exporter:
     image: mosquitto-exporter
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../
+      dockerfile: build/package/Dockerfile
       args:
         APPLICATION: "mosquitto-exporter"
         BUILD_RFC3339: "1970-01-01T00:00:00Z"

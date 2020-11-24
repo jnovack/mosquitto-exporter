@@ -1,7 +1,7 @@
-FROM arm64v8/golang:1.14-alpine as build
+FROM arm32v7/golang:1.15-alpine as build
 
 # Copy downloaded architecture emulation static binary
-COPY qemu-aarch64-static /usr/bin/
+COPY qemu-arm-static /usr/bin/
 
 WORKDIR /go/src/app
 
@@ -29,15 +29,15 @@ ARG BUILD_RFC3339="1970-01-01T00:00:00Z"
 ARG COMMIT="local"
 ARG VERSION="dirty"
 ARG GO_LDFLAGS="-w -s \
-        -X github.com/jnovack/release.Application=${APPLICATION} \
-        -X github.com/jnovack/release.BuildDate=${BUILD_RFC3339} \
-        -X github.com/jnovack/release.Revision=${COMMIT} \
-        -X github.com/jnovack/release.Version=${VERSION} \
-        -extldflags '-static'"
+    -X github.com/jnovack/release.Application=${APPLICATION} \
+    -X github.com/jnovack/release.BuildDate=${BUILD_RFC3339} \
+    -X github.com/jnovack/release.Revision=${COMMIT} \
+    -X github.com/jnovack/release.Version=${VERSION} \
+    -extldflags '-static'"
 
 # Build
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags "${GO_LDFLAGS}" -o /go/bin/${APPLICATION} .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -ldflags "${GO_LDFLAGS}" -o /go/bin/${APPLICATION} cmd/${APPLICATION}/main.go
 
 ###############################################################################
 # final stage
@@ -52,15 +52,15 @@ ARG COMMIT="local"
 ARG VERSION="dirty"
 
 LABEL org.opencontainers.image.ref.name="jnovack/mosquitto-exporter" \
-      org.opencontainers.image.created=$BUILD_RFC3339 \
-      org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
-      org.opencontainers.image.documentation="https://github.com/jnovack/mosquitto-exporter/README.md" \
-      org.opencontainers.image.description="Minimalist mosquitto-exporter for single host deployments." \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.source="https://github.com/jnovack/mosquitto-exporter" \
-      org.opencontainers.image.revision=$COMMIT \
-      org.opencontainers.image.version=$VERSION \
-      org.opencontainers.image.url="https://hub.docker.com/r/jnovack/mosquitto-exporter/"
+    org.opencontainers.image.created=$BUILD_RFC3339 \
+    org.opencontainers.image.authors="Justin J. Novack <jnovack@gmail.com>" \
+    org.opencontainers.image.documentation="https://github.com/jnovack/mosquitto-exporter/README.md" \
+    org.opencontainers.image.description="Minimalist mosquitto-exporter for single host deployments." \
+    org.opencontainers.image.licenses="MIT" \
+    org.opencontainers.image.source="https://github.com/jnovack/mosquitto-exporter" \
+    org.opencontainers.image.revision=$COMMIT \
+    org.opencontainers.image.version=$VERSION \
+    org.opencontainers.image.url="https://hub.docker.com/r/jnovack/mosquitto-exporter/"
 
 COPY --from=build /go/bin/mosquitto-exporter /mosquitto-exporter
 
