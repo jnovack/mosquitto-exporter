@@ -4,14 +4,12 @@
 # - https://stackoverflow.com/questions/54578066/how-to-build-a-docker-image-on-a-specific-architecture-with-docker-hub.
 
 
-echo "[***] post_checkout hook starting..."
-
 ## Unshallow the repository to get all the tags.
 if [ -f $(git rev-parse --git-dir)/shallow ]; then
-    echo "[+++] Unshallowing to get correct tags to work."
+    echo "[***] Unshallowing to get correct tags to work."
     git fetch --tags --unshallow --quiet origin
 else
-    echo "[+++] Not a shallow repository."
+    echo "[***] Not a shallow repository."
 fi
 
 
@@ -32,11 +30,20 @@ do
         *amd64)
             QEMU_ARCH="x86_64"
             ;;
+        *arm32v5)
+            QEMU_ARCH="arm"
+            ;;
+        *arm32v6)
+            QEMU_ARCH="arm"
+            ;;
         *arm32v7)
             QEMU_ARCH="arm"
             ;;
         *arm64v8)
             QEMU_ARCH="aarch64"
+            ;;
+        *i386)
+            QEMU_ARCH="i386"
             ;;
         *)
             echo "[---] Unknown target architecture, skipping qemu-user-static download"
@@ -45,13 +52,11 @@ do
     esac
 
     if [[ ! -f qemu-${QEMU_ARCH}-static ]]; then
-        echo "[+++] Downloading ${QEMU_DOWNLOAD_URL}/${QEMU_LATEST_TAG}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz"
+        echo "[***] Downloading ${QEMU_DOWNLOAD_URL}/${QEMU_LATEST_TAG}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz"
         curl -sL "${QEMU_DOWNLOAD_URL}/${QEMU_LATEST_TAG}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz" \
             | tar xzv
     else
-        echo "[+++] qemu-${QEMU_ARCH}-static already exists. Skipping download."
+        echo "[***] qemu-${QEMU_ARCH}-static already exists. Skipping download."
     fi
 
 done
-
-echo "[***] ...post_checkout hook complete."

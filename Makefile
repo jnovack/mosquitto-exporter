@@ -1,21 +1,13 @@
-PACKAGE := $(shell git remote get-url --push origin | sed -E 's/.+[@|/](.+)\.(.+).git/\1.\2/' | sed 's/\:/\//')
-APPLICATION := $(shell basename `pwd`)
-BUILD_RFC3339 := $(shell date -u +"%Y-%m-%dT%H:%M:%S+00:00")
-COMMIT := $(shell git rev-parse HEAD)
-VERSION := $(shell git describe --tags)
+include scripts/variables.mk
+include scripts/go.mk
 
-GO_LDFLAGS := "-w -s \
-	-X github.com/jnovack/release.Application=${APPLICATION} \
-	-X github.com/jnovack/release.BuildDate=${BUILD_RFC3339} \
-	-X github.com/jnovack/release.Revision=${COMMIT} \
-	-X github.com/jnovack/release.Version=${VERSION} \
-	"
+.PHONY: build all
+.DEFAULT_GOAL := all
 
 all: build
 
-.PHONY: build
-build:
-	go build -o bin/${APPLICATION} -ldflags $(GO_LDFLAGS) cmd/${APPLICATION}/main.go
+test:
+	# Make your own tests
 
-docker:
-	docker build --build-arg APPLICATION=mosquitto-exporter -t mosquitto-exporter:latest .
+build:
+	# Make your own build statements

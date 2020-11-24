@@ -13,3 +13,4 @@
 **/obj
 **/docker-compose.override.yml
 **/qemu*
+**/coverage.txt
